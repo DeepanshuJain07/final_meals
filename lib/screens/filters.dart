@@ -1,4 +1,6 @@
+import 'package:final_meals/screens/tabs.dart';
 import 'package:flutter/material.dart';
+import 'package:final_meals/widgets/main_drawer.dart';
 
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key});
@@ -10,27 +12,37 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  var _glutenFreeFilterState = false;
+  var _glutenFreeFilterSet = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Your Favorites'),),
+      appBar: AppBar(title: Text('Your Favorites')),
+      drawer: MainDrawer(
+        onSelectScreen: (identifier) {
+          if (identifier == 'meals') {
+            Navigator.of(
+              context,
+            ).pushReplacement(MaterialPageRoute(builder: (ctx) => TabsScreen()));
+          } else {
+            Navigator.of(context).pop();
+          }
+        },
+      ),
+
       body: Column(
         children: [
           SwitchListTile(
-            value: _glutenFreeFilterState,
+            value: _glutenFreeFilterSet,
             onChanged: (isChecked) {
               setState(() {
-                _glutenFreeFilterState= isChecked;
+                _glutenFreeFilterSet = isChecked;
               });
             },
             title: Text(
               'Gluten-Free',
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Theme.of(context).colorScheme.onSurface,
-
-                
               ),
             ),
             subtitle: Text(
