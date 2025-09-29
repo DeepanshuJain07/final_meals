@@ -1,12 +1,14 @@
 import 'package:final_meals/screens/categories.dart';
+import 'package:final_meals/screens/filters.dart';
 import 'package:final_meals/screens/meals.dart';
+import 'package:final_meals/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:final_meals/models/meal.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
   @override
-  State<StatefulWidget> createState() {
+  State<TabsScreen> createState() {
     return _TabsScreenState();
   }
 }
@@ -14,14 +16,25 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   final List<Meal> _favoriteMeals = [];
 
-  void _toggleMealFavoriteStatus(Meal meal) {
-    var isExisting = _favoriteMeals.contains(meal);
+  void showInfoMessage(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 
-    if (isExisting) {
-      _favoriteMeals.remove(meal);
-    } else {
-      _favoriteMeals.add(meal);
-    }
+  void _toggleMealFavoriteStatus(Meal meal) {
+    setState(() {
+      var isExisting = _favoriteMeals.contains(meal);
+
+      if (isExisting) {
+        _favoriteMeals.remove(meal);
+        showInfoMessage('Meal is no longer a favorite');
+      } else {
+        _favoriteMeals.add(meal);
+        showInfoMessage('Meal is marked as favorite');
+      }
+    });
   }
 
   int selectedPageIndex = 0;
@@ -30,6 +43,15 @@ class _TabsScreenState extends State<TabsScreen> {
     setState(() {
       selectedPageIndex = index;
     });
+  }
+
+  void selectScreen(String identifier) {
+    Navigator.of(context).pop();
+    if (identifier == 'filters') {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (ctx) => FiltersScreen()));
+    }
   }
 
   @override
@@ -41,13 +63,14 @@ class _TabsScreenState extends State<TabsScreen> {
 
     if (selectedPageIndex == 1) {
       activeScreen = MealsScreen(
-        meals:_favoriteMeals,
+        meals: _favoriteMeals,
         onToggleFavorite1: _toggleMealFavoriteStatus,
       );
       activeScreenTitle = "Your Favorites";
     }
     return Scaffold(
       appBar: AppBar(title: Text(activeScreenTitle)),
+      drawer: MainDrawer(onSelectScreen: selectScreen),
 
       body: activeScreen,
       bottomNavigationBar: BottomNavigationBar(
