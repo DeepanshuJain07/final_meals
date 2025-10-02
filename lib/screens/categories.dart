@@ -3,11 +3,11 @@ import 'package:final_meals/screens/meals.dart';
 import 'package:final_meals/widgets/category_grid_item.dart';
 import 'package:flutter/material.dart';
 import 'package:final_meals/models/category.dart';
-import'package:final_meals/models/meal.dart';
+import 'package:final_meals/models/meal.dart';
 
 class CategoriesScreen extends StatelessWidget {
- const  CategoriesScreen({super.key, required this.onToggleFavorite, required this.totallyFilteredMeals});
-  final void Function(Meal meal) onToggleFavorite;
+  const CategoriesScreen({super.key, required this.totallyFilteredMeals});
+
   final List<Meal> totallyFilteredMeals;
 
   void selectCategory(BuildContext context, Category category) {
@@ -17,7 +17,7 @@ class CategoriesScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) =>
-            MealsScreen(title: category.title, meals: filteredMeals,onToggleFavorite1: onToggleFavorite,),
+            MealsScreen(title: category.title, meals: filteredMeals),
       ),
     );
   }
@@ -38,7 +38,7 @@ class CategoriesScreen extends StatelessWidget {
             CategoryGridItem(
               category: category1,
               onSelectCategory: () {
-                selectCategory(context,category1 );
+                selectCategory(context, category1);
               },
             ),
         ],
